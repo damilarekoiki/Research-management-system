@@ -1,0 +1,116 @@
+<------------This is not to be substituted for class structure and documentation as it was made to be a micro documentation for development phase --------------------------> 
+<-------------------- Master class methods and description ----------------------------->
+<---Note: --- some times user and media outfit are used interchangbly in the methods , as it read sometimes user_id, it literally translated  to media outfit id vice versa. also a slug e.g media_outfit_slug is replacing all the space in media outfit name witn underscore ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+register_company - use to register new media outfit
+
+generate_media_outfit_id - generate an id for the newly registered media outfit as required by the db table (company_user) .returns a json status 1 for success,0 for failure and a message key for more verbose  
+
+generate_user_activation - generate an activation code for the newly registered user as required by the db table (company_user).
+
+activate_media_outfit - use to activate media outfit after registeration and email confirmation returns a json status 1 for success,0 for failure and a message key for more verbose  
+
+update_media_outfit_activation_code - it update the user activation code after activating so code can be reuse for forgot password purposes. returns none
+
+company_login - this method provide a login access for a media outfit thats activate his/her account. returns true , expecting devceloper to provide adequate response and also redirection based on the get_media_outfit_category method
+
+set_user_progress - this method set the user setup progress after registeration, this method is internaly used in registeration process and can be used other places
+
+update_user_progress -this method update the user setup progress after the setup progress ,  can be used in place of set_user_progress.
+
+resolve_to_time - resolves a timestamp to a string date
+
+forgot_password - send the user an activation link on user forget password.returns a json status 1 for success,0 for failure and a message key for more verbose  response
+
+reset_password - use to reset the user password after it has been activated ,eturns a json status 1 for success,0 for failure and a message key for more verbose  response
+
+media_outfit_exist - check maybe media outfit exist ,returns true or false.
+
+user_exist - check maybe user exist returns true or false
+
+get_user_password - use to get the user password, it was use internally in change_password, returns a string of the pasword
+
+get_last_media_outfit_id - returns the last registered media outfit company_id, use internally to generate media outfit id
+
+get_media_outfit_id - use to get a user media outfit, return an interger of the user company_id
+
+get_media_outfit_activation - use to get get_media_outfit_activation code from db, used internally in one of the methods
+
+get_media_outfit_expiry - returns the expiry column of the company_users tbl of the user, used internally in activating the user account method.
+
+get_media_outfit_logo - returns the media outfit logo path
+
+get_media_outfit - returns a user media outfit slug
+
+get_all_ads_type - returns all ads type entered into the sys on the ads_type table
+
+get_ads_type -returns an ad type with the id specified
+
+get_special_day - returns a particular special day from the one entered specified by id
+
+get_all_special_days - returns all special days entered into the sys
+
+get_user_media_outfit_category - get the user media outfit category selected during company regsiteration . it can be use for redirect after login or page authentication
+
+get_user_current_setup_stage - returns the tag of the user current setup stage
+
+get_user_next_setup_stage - returns the tag of the user setup setup page
+
+is_loggedin- use to check if user is logged in, return false if not
+
+logged_in_user - return logged in user email(contact_person_email)
+
+logout - logout user
+
+
+<-------------------- ON_AIR_MEDIA class methods and description ----------------------------->
+<---Note: --- some times user and media outfit are used interchangbly in the methods , as it read sometimes user_id, it literally translated  to media outfit id vice versa. also a slug e.g media_outfit_slug is replacing all the space in media outfit name witn underscore --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+add_program - this method is use to add new program for the radio/tv station,returns a json status 1 for success,0 for failure and a message key for more verbose  response (still under construction)
+
+ads_type_possible_electronic - use to add advert possible in a particular program,(still under construction)
+
+add_ads_price - media house use this to add prices to the advert they have selected
+, returns a json status 1 for success,0 for failure and a message key for more verbose  response 
+
+set_addional_serv_price - media house use this to set prices of there additional services
+ returns a json status 1 for success,0 for failure and a message key for more verbose  response 
+
+ update_addional_serv_price - media house use this to update there additional service prices either by duriing setup or afterward. returns a json status 1 for success,0 for failure and a message key for more verbose  response
+
+ update_ads_price - media house use this to update the price of the advert they have selected
+, returns a json status 1 for success,0 for failure and a message key for more verbose  response 
+
+check_user_ads_price_set - use to check maybe an ad price has been set or it an update, it returns true or false.
+
+get_all_ads_price - returns all user ads prices
+
+get_inv_ads_price - returns user single ads price
+
+add_peak_period - use to add peak periods for user. this is the first stage of the setup process.returns a json status 1 for success,0 for failure and a message key for more verbose  response
+
+update_peak_period - use to update a single peak period the user trying to update.returns a json status 1 for success,0 for failure and a message key for more verbose  response
+
+get_user_peak_periods - use to get single peak period choosed by the user.
+
+
+
+set_ads_available - The user use this to set there availble ads from the one fetched from the sys db. returns a json status 1 for success,0 for failure and a message key for more verbose  response
+
+update_ads_available - it is use to update an already choosen ads type or situation on which user previous .returns a json status 1 for success,0 for failure and a message key for more verbose  response
+
+get_all_ads_avail - returns all availbale for the user
+
+set_ads_elec_serv_typ_avail - use to add electronic service type offered by the offered by the company. it is choosen from an exhaustive list get from get_all_additional_serv() method.eturns a json status 1 for success,0 for failure and a message key for more verbose  response
+
+update_ads_elec_serv_typ_avail  - update the above
+
+check_set_ads_elec_serv_typ_avail - check maybe the ads selected by user is already available this can be used to set update rule.
+
+get_media_type - return the media type e.g radio or tv
+
+get_last_program_id - return the last program id, using in generating of program id
+
+get_ads_slot_in_program - use to get the total number of ads slot in a program
+
+get_all_user_additional_serv - get all additional services offered by user
+
+please read the rest of the method for now has there has the much work to be done.thanks
