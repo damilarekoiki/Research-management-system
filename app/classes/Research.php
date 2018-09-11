@@ -453,7 +453,7 @@ class Research extends Master
     }
 
     public function remove_research_file($research_id,$file_id){
-        $data  = array("research_id"=>$research_id,"file_id"->$file_id);
+        $data  = array("research_id"=>$research_id,"file_id"=>$file_id);
 
         $stmt = $this->db->prepare("DELETE FROM research_files WHERE research_id= :research_id AND file_id=:file_id ");
         if($stmt->execute($data)){
