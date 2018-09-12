@@ -1,5 +1,8 @@
 <?php
     include ("../app/init.php");
+    if(!isset($_SESSION['email'])){
+        $master->redirect("../index.php");
+    }
     $all_collaborators=$research->get_all_collaborators();
     $all_references_avail=$research->get_all_references_avail();
 ?>

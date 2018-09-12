@@ -1,5 +1,8 @@
 <?php
     include ("../app/init.php");
+      if(!isset($_SESSION['email'])){
+        $master->redirect("../index.php");
+      }
     $all_researches=$research->get_all_approved_researches();
     $follower_id=$user_id;
     $all_references_avail=$research->get_all_references_avail();
@@ -99,7 +102,7 @@
       <img src="../<?php echo $researcher_pix;?>" class="" height="18">
       <div style="font-size:10px;"><strong title="<?php echo $researcher_name;?>"><?php if(strlen($researcher_name)>10){echo substr($researcher_name,0,10)."...";}else{ echo $researcher_name; }?></strong></div>
     </div>
-    <div class="col-md-10 research-title"><h3> <?php echo ucwords(strtolower($title))?></h3></div>
+    <div class="col-md-10"><h3 class="research-title"> <?php echo ucwords(strtolower($title))?></h3></div>
     <div class="col-md-1">
       <?php
         if($researcher_id==$user_id && $logged_in_user_role!=1){
@@ -142,11 +145,7 @@
         <div class="dropdown show">
           <a class="btn" href="#" role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:black;"><i class="fa fa-ellipsis-v"> </i></a>
           <div class="dropdown-menu" araia-labelledby="dropdownMenuButton">
-
-            <button class="nav-link js-scroll-trigger btn showTextEditor" type="button" style="color:black;background:none;text-transform: none;" research-id="<?php echo $research_id; ?>">Add write-up</button>
-
-            <button data-toggle="modal" data-target="#addResearchFileModal" class="nav-link js-scroll-trigger btn showfileUploadModal" type="button" style="color:black;background:none;text-transform: none;" research-id="<?php echo $research_id; ?>" onclick="openResearchFileFormModal(<?php echo $research_id; ?>,<?php echo $researcher_id; ?>,'t_r_f_msg<?php echo $i;?>')">Add file</button>
-
+          
             <button data-toggle="modal" data-target="#reportModal" class="nav-link js-scroll-trigger btn" type="button" style="color:black;background:none;text-transform: none;" onclick="reportResearcher(<?php echo $researcher_id; ?>)">Report researcher</button>
 
             <button data-toggle="modal" data-target="#reportModal" class="nav-link js-scroll-trigger btn" type="button" style="color:black;background:none;text-transform: none;" onclick="reportResearch(<?php echo $research_id; ?>)">Report research</button>
@@ -160,7 +159,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-10 mx-auto text-center research-description"> <h6><?php echo ucfirst(strtolower($description))?></h6></div>
+    <div class="col-md-10 mx-auto text-center"> <h6 class="research-description"><?php echo ucfirst(strtolower($description))?></h6></div>
   </div>
   <div class="row research-write-up-div" style="margin-top:15px">
     <div class="col-md-1"></div>
@@ -301,7 +300,7 @@
   </div>
   <div class="row" style='padding:5px 0px 0px 10px'>
     <div class="col-md-1"></div>
-    <div class='col-md-4'><b style='color:grey'><?php echo $total_collaborators; ?> Collaborators</b></div>
+    <div class='col-md-4'><b style='color:grey'><span class="numb-collab"><?php echo $total_collaborators; ?></span> Collaborators</b></div>
   </div>
 
   <div class="row" style="margin-top:25px;">
@@ -573,16 +572,17 @@
           <div class="modal-body mx-auto" id="" style="padding:7px">
             <form enctype="multipart/form-data" id="EditResearchForm">
               <div class="form-group">
-                <label for="title">Title</label>
+                <label for="editTitle">Title</label>
                 <input type="text" name="title" class="form-control" id="editTitle" placeholder="Title"/>
               </div>
               <div class="form-group">
-                <label for="description">Description</label>
+                <label for="editDescription">Description</label>
                 <input type="text" name="description" class="form-control"  id="editDescription" placeholder="Description"/>
               </div>
               <div class="form-group">
-                  <label for="collaborators">Add collaborators (Optional)</label>
-                  <select name="collaborators[]" class="form-control" id="editCollaborators" multiple>
+                  <label for="editCollaborators">Add collaborators (Optional)</label>
+                  <select name="collaborators[]" class="form-control" id="editCollaborators" multiple style="width:100%">
+
                   </select>
               </div>
               <div class="form-group">
@@ -638,6 +638,11 @@
     });
     $("#researchFileRefernces,#contributionFileRefernces").select2({
       placeholder:"Add References",
+      tags:true
+    })
+
+    $("#editCollaborators").select2({
+      placeholder:"Add Collaborators",
       tags:true
     })
   </script>
@@ -1358,8 +1363,42 @@ var reportResearcherId=0;
     e.preventDefault();
     editTitle=$("#editTitle").val();
     editDescription=$("#editDescription").val();
-    $("#"+editResearchParentId).find(".research-title").html(editTitle);
-    $("#"+editResearchParentId).find(".research-description").html(editDescription);
+    formData=new FormData();
+    formData.append("edit_research",1)
+    formData.append("title",editTitle)
+    formData.append("description",editDescription)
+    formData.append("research_id",edResearchId)
+    formData.append("researcher_id",edResearcherId)
+
+
+    countCollab=0;
+    $("#editCollaborators :selected").each(function(){
+      try{
+        countCollab++;
+          formData.append('collaborators[]',$(this).val());
+      }catch(e){
+
+      }
+    });
+    
+
+    $.ajax({
+      url:"../parser/research_parser.php",
+      data:formData,
+      type:"post",
+      contentType: false,
+      cache: false,
+      processData: false,
+      success:function(data){
+        console.log(data);
+        data=JSON.parse(data);
+        $("#"+editResearchParentId).find(".research-title").html(editTitle);
+        $("#"+editResearchParentId).find(".research-description").html(editDescription);
+        $("#"+editResearchParentId).find(".numb-collab").html(countCollab);
+        alert(data.message)
+
+      }
+    })
   })
 </script>
 

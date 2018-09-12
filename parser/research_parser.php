@@ -27,6 +27,34 @@
         }
     }
 
+    if(isset($_POST['edit_research'])){
+        $title=$_POST['title'];
+        $description=$_POST['description'];
+        $researcher_id=$_POST['researcher_id'];
+        $research_id=$_POST['research_id'];
+        $collaborators=$_POST['collaborators'];
+
+        if(!empty($title)&&!empty($description)){
+            $message=$research->edit($research_id,$title,$description);
+            $all_collaborators=$research->fetch_all_collaborators($research_id);
+            if(!empty($all_collaborators)){
+                foreach ($all_collaborators as $collaborator) {
+                    $colb_id=$collaborator['collaborator'];
+                    $researcher->remove_as_research_collaborator($research_id,$colb_id);
+                }
+            }
+            if(isset($_POST['collaborators']) && !empty($_POST['collaborators'])){
+                $collaborators=$_POST['collaborators'];
+                foreach ($collaborators as $collaborator) {
+                    $research->add_collaborator($research_id,$collaborator);
+                }
+            }
+            exit($message);
+        }else{
+            exit(json_encode(["status"=>0,"message"=>"Please fill important fields"]));
+        }
+    }
+
     if(isset($_POST['fetch_collaborators'])){
         $sample_name=$_POST['sample_name'];
         $collaborators=$research->fetch_collaborators($sample_name);
@@ -651,21 +679,21 @@
     if(isset($_POST['fetch_research_details'])){
         $research_id=$_POST['research_id'];
         $research_details=$research->details($research_id);
-        var_dump($research_details);
         $research_title=$research_details['research_title'];
-        $research_description=$research_details['description'];
+        $research_description=$research_details['research_description'];
         $all_users=$master->fetch_all_users();
-        $sel="";
+        
         $research_collaborators="";
         if(!empty($all_users)){
             foreach ($all_users as $a_user) {
+                $sel="";
                 $u_id=$a_user['user_id'];
                 if($researcher->is_in_collaboration_on_research($research_id,$u_id)){
                     $sel="selected";
                 }
 
                 $researcher_name=$a_user['surname']." ".$a_user['other_names'];
-                $research_collaborators.="<option value='$u_id'>".$researcher_name."</option>";
+                $research_collaborators.="<option value='$u_id' $sel>".$researcher_name."</option>";
             }
         }
 
@@ -720,9 +748,9 @@
 
             if(!empty($all_research_text_references)){
                 foreach ($all_research_text_references as $text_reference) {
-                    if(!in_array($text_reference['reference_id'],$references_ids)){
+                    // if(!in_array($text_reference['reference_id'],$references_ids)){
                         $research->remove_research_text_reference($text_id,$text_reference['reference_id']);
-                    }
+                    // }
                 }
             }
 
@@ -769,9 +797,9 @@
 
             if(!empty($all_research_text_references)){
                 foreach ($all_research_text_references as $text_reference) {
-                    if(!in_array($text_reference['reference_id'],$references_ids)){
-                        $research->remove_research_contribution_text_reference($text_id,$text_reference['reference_id']);
-                    }
+                    // if(!in_array($text_reference['reference_id'],$references_ids)){
+                    $research->remove_research_contribution_text_reference($text_id,$text_reference['reference_id']);
+                    // }
                 }
             }
 

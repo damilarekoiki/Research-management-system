@@ -200,6 +200,16 @@ class Researcher extends Master
         } 
     }
 
+    public function my_researches($researcher_id)
+    {
+        $data = "*";
+        $table = "research";
+        $where = " WHERE researcher_id=$researcher_id";
+
+        $result = $this->getAllData($data, $table, $where);
+        return $result;
+    }
+
 
 
      

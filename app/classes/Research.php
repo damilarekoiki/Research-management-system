@@ -972,6 +972,23 @@ class Research extends Master
         return $message;
     }
 
+    public function edit($research_id,$title,$description)
+    {
+        
+        $data  = array("research_id"=>$research_id,"research_title"=>$title,"research_description"=>$description);
+
+        $table = "research";
+        $where=" where research_id='$research_id'";
+        $res = $this->updateData($data,$table,$where);
+        if($res){
+            $message = json_encode(array('status' => 1,"message"=>"Research successfully edit"));
+        
+        }else{
+            $message = json_encode(array('status' => 0, "message"=>"Could not update reference"));
+        }
+        return $message;
+    }
+
     public function remove_research_file_reference($file_id,$reference_id)
     {
         

@@ -61,6 +61,8 @@ $coordinator = new Coordinator($db_conn,$lang);
         $user_surname=$user_data['surname'];
     }
 
+    
+
     // echo "<script>alert('".SITE_PATH."')</script>";
         
 

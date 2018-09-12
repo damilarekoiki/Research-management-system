@@ -1,5 +1,8 @@
 <?php
     include ("../app/init.php");
+    if(!isset($_SESSION['email'])){
+        $master->redirect("../index.php");
+    }
 
     $all_researches=$research->get_all_researches();
 ?>
@@ -55,7 +58,8 @@
         <div class="row">
             
             <div class="col-md-10 mx-auto mb-5">
-                <h4 class="section-heading">All Created Researches</h4> <br>
+                <h4 class="section-heading" style="font-weight:bold;">All Created Researches By All Users</h4>
+                <h6>Only the ones you approve will appear in the home page</h6>
                 <?php
                     $i=0;
                     if(!empty($all_researches)){
@@ -133,8 +137,14 @@
                             <div class="col-md-8">
                                 <div class='row'><span style="color:grey;">Research title</span>: <?php echo $research_title;?></div>
                                 <div class='row' style="margin-top:25px;" id="approvalDiv<?php echo $i;?>"><?php echo $approval_msg;?></div>
+                                <?php $enc_research_id=base64_encode($research_id);?>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <a href="research_details.php?research_id=<?php echo $enc_research_id;?>" style="color:brown;">View details</a>
+                                </div>
                             </div>
                         </div>
+                        
                 
                 <?php
                         $research->update_research_creation_is_seen($research_id);

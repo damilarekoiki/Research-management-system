@@ -1,5 +1,8 @@
 <?php
     include ("../app/init.php");
+    if(!isset($_SESSION['email'])){
+        $master->redirect("../index.php");
+    }
 
     $all_follow_requests=$research->get_all_follow_requests($user_id);
 ?>
@@ -55,7 +58,7 @@
         <div class="row">
             
             <div class="col-md-10 mx-auto mb-5">
-                <h4 class="section-heading">All follow requests</h4> <br>
+                <h4 class="section-heading" style="font-weight:bold;">All follow requests sent to you</h4> <br>
                 <?php
                     $i=0;
                     if(!empty($all_follow_requests)){
@@ -88,7 +91,7 @@
                             if($is_approved==1){
                                 $approval_msg="
                                     <div class='col-md-4'>
-                                        <span style='font-size:10px;color:blue'>Approved</span>
+                                        <span style='font-size:10px;color:blue'>Follow request approved</span>
                                     </div>
                                     <div class='col-md-4'>
                                         <button class='btn btn-primary'". '  onclick="decideOnFollowRequest(2,'.$research_id.','.$follower_id.','."'approvalDiv$i'".')"'.">Make Pending</button>
@@ -101,7 +104,7 @@
                             }elseif($is_approved==0){
                                 $approval_msg="
                                     <div class='col-md-4'>
-                                        <span style='font-size:10px;color:red'>Declined</span>
+                                        <span style='font-size:10px;color:red'>Follow request declined</span>
                                     </div>
                                     <div class='col-md-4'>
                                         <button class='btn btn-primary'". '  onclick="decideOnFollowRequest(2,'.$research_id.','.$follower_id.','."'approvalDiv$i'".')"'.">Make Pending</button>
@@ -113,7 +116,7 @@
                             }elseif($is_approved==2){
                                 $approval_msg="
                                     <div class='col-md-4'>
-                                        <span style='font-size:10px;color:grey'>Not yet approved</span>
+                                        <span style='font-size:10px;color:grey'>Follow request not yet approved</span>
                                     </div>
                                     <div class='col-md-4'>
                                         <button class='btn btn-danger'". '  onclick="decideOnFollowRequest(0,'.$research_id.','.$follower_id.','."'approvalDiv$i'".')"'.">Decline</button>
@@ -133,7 +136,12 @@
                             <div class="col-md-8">
                                 <div class='row'><span style="color:grey;">Research title</span>: <?php echo $research_title;?></div>
                                 <div class='row' style="margin-top:25px;" id="approvalDiv<?php echo $i;?>"><?php echo $approval_msg;?></div>
+                                <?php $enc_research_id=base64_encode($research_id);?>
+                                <div class="row" style="padding-top:35px">
+                                    <a href="research_details.php?research_id=<?php echo $enc_research_id;?>" style="color:brown;font-size:11px">View research details</a>
+                                </div>
                             </div>
+                            
                         </div>
                 
                 <?php

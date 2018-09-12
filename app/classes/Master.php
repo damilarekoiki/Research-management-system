@@ -213,7 +213,7 @@ class Master
                 exit(json_encode(["status"=>1,"message"=>"Login successful","url"=>"index.php"]));
 
             } else {
-                exit(json_encode(["status"=>0,"message"=>$password]));
+                exit(json_encode(["status"=>0,"message"=>"Invalid username or password"]));
             }
         } catch (PDOException $e) {
             return $e->getMessage();

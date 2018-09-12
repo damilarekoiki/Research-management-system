@@ -52,6 +52,18 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
+            <li>
+              <form action="search_result.php" method="get">
+                <div class="form-inline">
+                    <div class="form-group">
+                      <input type="text" name="research_search" id="" class="form-control" placeholder="Enter a research title">                    
+                    </div>
+                    <div class="form-group">
+                      <button class="btn btn-primary"><i class="fa fa-search"></i></button>                   
+                    </div>
+                </div>
+              </form>
+            </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="../<?php echo $home;?>" style="color:black;">Home</a>
             </li>
@@ -89,10 +101,18 @@
               <span style="font-size:9px;"><?php echo $user_surname;?></span></a>
                   <div class="dropdown-menu" araia-labelledby="dropdownMenuButton">
                       <a class="nav-link js-scroll-trigger" href="#">View Profile</a>
+                      <a class="nav-link js-scroll-trigger" href="my_researches.php">My researches</a>
+                      <a class="nav-link js-scroll-trigger" href="view_all_follow_requests.php">All follow requests</a>
+                      <?php if($master->get_user_data($user_id)['user_role']==1){
+                      ?>
+                        <a class="nav-link js-scroll-trigger" href="view_all_researches.php">All researches</a>
+                      <?php
+                      }?>
                       <a class="nav-link js-scroll-trigger" href="../logout.php?logout=1">Logout</a>
                   </div>
               </span>
             </li>
+            
           </ul>
         </div>
       </div>
