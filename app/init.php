@@ -28,6 +28,7 @@ include "classes/Master.php";
 include "classes/Research.php";
 include "classes/Researcher.php";
 include "classes/Coordinator.php";
+include "classes/Admin.php";
 
 // include "classes/On_Air_Media.php";
 // include "classes/Display.php";
@@ -38,7 +39,7 @@ $master = new Master($db_conn,$lang);
 $research = new Research($db_conn,$lang);
 $researcher = new Researcher($db_conn,$lang);
 $coordinator = new Coordinator($db_conn,$lang);
-// $user = new User($db_conn,$lang);
+$admin = new Admin($db_conn,$lang);
 
 
     $home="#";
@@ -57,6 +58,13 @@ $coordinator = new Coordinator($db_conn,$lang);
         $user_id=$_SESSION['user_id'];
         $user_data=$master->get_user_data($user_id);
 
+        $user_img=$user_data['profile_pix'];
+        $user_surname=$user_data['surname'];
+    }
+
+    if(isset($_SESSION['admin_id'])){
+        $user_id=$_SESSION['admin_id'];
+        $user_data=$admin->get_admin_data($user_id);
         $user_img=$user_data['profile_pix'];
         $user_surname=$user_data['surname'];
     }

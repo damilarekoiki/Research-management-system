@@ -1,11 +1,13 @@
 <?php
-    include ("../app/init.php");
-      if(!isset($_SESSION['email'])){
-        $master->redirect("../index.php");
-      }
-    $all_researches=$research->get_all_approved_researches();
-    $follower_id=$user_id;
-    $all_references_avail=$research->get_all_references_avail();
+  include ("../app/init.php");
+  if(!isset($_SESSION['email'])){
+    $master->redirect("../index.php");
+  }
+  $all_researches=$research->get_all_approved_researches();
+  $follower_id=$user_id;
+  $all_references_avail=$research->get_all_references_avail();
+  $is_approved_as_coordinator=$master->get_user_data($user_id)['is_approved_as_coordinator'];
+
 ?>
 
 <!DOCTYPE html>
@@ -140,7 +142,7 @@
         </div>
 
       <?php
-        }elseif($logged_in_user_role==1 && $researcher_id!=$user_id){
+        }elseif($logged_in_user_role==1 && $researcher_id!=$user_id && $is_approved_as_coordinator==1){
       ?>
         <div class="dropdown show">
           <a class="btn" href="#" role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:black;"><i class="fa fa-ellipsis-v"> </i></a>
@@ -311,14 +313,16 @@
     </div>
     <?php
       $contribution_text_references_html="";
-      foreach ($all_references_avail as $ref_avail) {
-        $ref_id=$ref_avail["reference_id"];
-        $research_topic=$ref_avail["reference"];
-        $sel="";
-        if($research->research_contribution_text_owns_reference($research_contribution_text_id,$ref_id)){
-          $sel="selected";
+      if(!empty($all_references_avail)){
+        foreach ($all_references_avail as $ref_avail) {
+          $ref_id=$ref_avail["reference_id"];
+          $research_topic=$ref_avail["reference"];
+          $sel="";
+          if($research->research_contribution_text_owns_reference($research_contribution_text_id,$ref_id)){
+            $sel="selected";
+          }
+          $contribution_text_references_html.="<option datavalue='$ref_id' reference_name='$research_topic' $sel>$research_topic</option>";
         }
-        $contribution_text_references_html.="<option datavalue='$ref_id' reference_name='$research_topic' $sel>$research_topic</option>";
       }
 
       
@@ -599,22 +603,8 @@
 
     
 
-    <footer>
-      <div class="container">
-        <p>&copy; Your Website 2018. All Rights Reserved.</p>
-        <ul class="list-inline">
-          <li class="list-inline-item">
-            <a href="#">Privacy</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">Terms</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">FAQ</a>
-          </li>
-        </ul>
-      </div>
-    </footer>
+    <?php include ("footer.php");?>
+    
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>

@@ -31,7 +31,7 @@ if(isset($_POST['login'])){
 
     if(!empty($email)&&!empty($password)){
         $result=$master->user_login($email, $password);
-        // exit($password);
+        exit($result);
     }else{
         exit(json_encode(["status"=>0,"message"=>"Please fill all fields"]));
     }

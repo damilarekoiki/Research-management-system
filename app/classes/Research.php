@@ -1236,6 +1236,17 @@ class Research extends Master
         } 
     }
 
+    public function fetch_all_reports(){
+        $data = "*";
+        $table = "research_report";
+        $where = " ORDER BY id DESC";
+
+        $result = $this->getAllData($data, $table, $where);
+        return $result;
+    }
+
+    
+
     
 
 

@@ -160,8 +160,9 @@ class Researcher extends Master
         $user_details=$this->get_user_data($researcher_id);
         $research_owner_id=$research->details($research_id)['researcher_id'];
         $user_role=$user_details['user_role'];
+        $is_approved_as_coordinator=$user_details['is_approved_as_coordinator'];
 
-        if($follows_research || $collaborates_on_research || $research_is_shared_to_this_researcher || $user_role==1 || $researcher_id==$research_owner_id){
+        if($follows_research || $collaborates_on_research || $research_is_shared_to_this_researcher || ($user_role==1 && $is_approved_as_coordinator==1) || $researcher_id==$research_owner_id ){
             return true;
         }else {
             return false;
@@ -205,6 +206,25 @@ class Researcher extends Master
         $data = "*";
         $table = "research";
         $where = " WHERE researcher_id=$researcher_id";
+
+        $result = $this->getAllData($data, $table, $where);
+        return $result;
+    }
+
+    public function fetch_all()
+    {
+        $data = "*";
+        $table = "user";
+        $where = " WHERE user_role=0 ORDER BY id DESC";
+
+        $result = $this->getAllData($data, $table, $where);
+        return $result;
+    }
+
+    public function fetch_all_reports(){
+        $data = "*";
+        $table = "researcher_report";
+        $where = " ORDER BY id DESC";
 
         $result = $this->getAllData($data, $table, $where);
         return $result;

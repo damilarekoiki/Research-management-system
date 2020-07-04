@@ -25,7 +25,8 @@ class Master
             return false;
         }
     }
-        public function register_user($surname,$other_names,$email,$password,$user_role)
+    
+        public function register_user($surname,$other_names,$email,$password,$user_role,$is_approved_as_coordinator=2)
         {
             $check_user_exist=$this->user_exist($email);        
             if($check_user_exist==false){
@@ -38,42 +39,42 @@ class Master
 
                 //make the directory
                 // $create_pix_directory = mkdir("../user/assets/profile_pix");
-                $create_user_directory = mkdir("../user/assets/profile_pix/$user_id");
+                // $create_user_directory = mkdir("../user/assets/profile_pix/$user_id");
                 
                 $path = "app/assets/avatar.png";
 
-                if($create_user_directory){
+                // if($create_user_directory){
 
-                    //check if pix is uploaded
-                    if(isset($_FILES['profile_pix'])){
-                        // return "jdkdid";
-                        if(is_uploaded_file($_FILES['profile_pix']['tmp_name'])){
-                            $file_temp = $_FILES['profile_pix']['tmp_name'];
-                            $file_name = $_FILES['profile_pix']['name'];
-                            $ext =  pathinfo($file_name,PATHINFO_EXTENSION);
-                            if($ext == "jpg" || $ext == "png" || $ext == "PNG" ){
+                //     //check if pix is uploaded
+                //     if(isset($_FILES['profile_pix'])){
+                //         // return "jdkdid";
+                //         if(is_uploaded_file($_FILES['profile_pix']['tmp_name'])){
+                //             $file_temp = $_FILES['profile_pix']['tmp_name'];
+                //             $file_name = $_FILES['profile_pix']['name'];
+                //             $ext =  pathinfo($file_name,PATHINFO_EXTENSION);
+                //             if($ext == "jpg" || $ext == "png" || $ext == "PNG" ){
 
-                                $file_name =  "".$file_name;
+                //                 $file_name =  "".$file_name;
 
-                                $result =  move_uploaded_file($file_temp,$file_name);
-                                if($result){
-                                    $path =  $file_name;
+                //                 $result =  move_uploaded_file($file_temp,$file_name);
+                //                 if($result){
+                //                     $path =  $file_name;
 
-                                }else{
-                                    $path = "app/assets/avatar.png";
-                                }
+                //                 }else{
+                //                     $path = "app/assets/avatar.png";
+                //                 }
 
-                            }else{
-                                //use avatar as logo
-                                $path = "app/assets/avatar.png";
-                            }
-                        }else{
-                            //use avatar as logo
-                            $path = "app/assets/avatar.png";
-                        }
+                //             }else{
+                //                 //use avatar as logo
+                //                 $path = "app/assets/avatar.png";
+                //             }
+                //         }else{
+                //             //use avatar as logo
+                //             $path = "app/assets/avatar.png";
+                //         }
                     
-                    }
-                }
+                //     }
+                // }
 
                 $sql = "INSERT INTO user SET
                         user_id = :user_id,
@@ -86,11 +87,12 @@ class Master
                         account_status = :account_status,
                         date_registered = :date_registered,
                         activation_code_validity = :activation_code_validity,
-                        profile_pix = :profile_pix
+                        profile_pix = :profile_pix,
+                        is_approved_as_coordinator= :is_approved_as_coordinator
                         ";
 
                 $stmt = $this->db->prepare($sql);
-                $stmt->execute(array('user_id'=>$user_id,'surname'=>$surname,'other_names'=>$other_names,'user_role'=>$user_role,'email'=>$email,'password'=>$password,'activation_code'=>$activation_code,'account_status'=>1,'date_registered'=>date("Y-m-d H:i:s"),'activation_code_validity'=>$activation_code_validity,'profile_pix'=>$path));
+                $stmt->execute(array('user_id'=>$user_id,'surname'=>$surname,'other_names'=>$other_names,'user_role'=>$user_role,'email'=>$email,'password'=>$password,'activation_code'=>$activation_code,'account_status'=>1,'date_registered'=>date("Y-m-d H:i:s"),'activation_code_validity'=>$activation_code_validity,'profile_pix'=>$path,"is_approved_as_coordinator"=>$is_approved_as_coordinator));
                 $message = json_encode(array('status'=>1,"message"=>"Registration successful, redirecting to login","url"=>"login.php"));
                 return $message;
 
@@ -210,10 +212,10 @@ class Master
                 $_SESSION['surname'] =  $userRow['surname'];
                 $_SESSION['other_names'] =  $userRow['other_names'];
                 $_SESSION['role'] =  $userRow['user_role'];
-                exit(json_encode(["status"=>1,"message"=>"Login successful","url"=>"index.php"]));
+                return (json_encode(["status"=>1,"message"=>"Login successful","url"=>"index.php"]));
 
             } else {
-                exit(json_encode(["status"=>0,"message"=>"Invalid username or password"]));
+                return (json_encode(["status"=>0,"message"=>"Invalid username or password"]));
             }
         } catch (PDOException $e) {
             return $e->getMessage();
@@ -264,25 +266,25 @@ class Master
         // }
 
 
-        public function getData($data, $table, $where = '')
-        {
-            try {
-                if ($data != '*') {
-                    $selections = implode(', ', $data);
-                } else {
-                    $selections = '*';
-                }
-
-                $stmt = $this->db->prepare("SELECT {$selections} FROM `$table` " . $where . " LIMIT 1");
-                $stmt->execute();
-                $settings_data = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($stmt->rowCount() > 0) {
-                    return $settings_data;
-                }
-            } catch (PDOException $e) {
-                echo $e->getMessage();
+    public function getData($data, $table, $where = '')
+    {
+        try {
+            if ($data != '*') {
+                $selections = implode(', ', $data);
+            } else {
+                $selections = '*';
             }
+
+            $stmt = $this->db->prepare("SELECT {$selections} FROM `$table` " . $where . " LIMIT 1");
+            $stmt->execute();
+            $settings_data = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() > 0) {
+                return $settings_data;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
         }
+    }
 
         
 

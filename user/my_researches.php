@@ -1,11 +1,14 @@
 <?php
-    include ("../app/init.php");
-    if(!isset($_SESSION['email'])){
+  include ("../app/init.php");
+  if(!isset($_SESSION['email'])){
     $master->redirect("../index.php");
-    }
-    $all_researches=$researcher->my_researches($user_id);
-    $follower_id=$user_id;
-    $all_references_avail=$research->get_all_references_avail();
+  }
+  $all_researches=$researcher->my_researches($user_id);
+  $follower_id=$user_id;
+  $all_references_avail=$research->get_all_references_avail();
+
+  $is_approved_as_coordinator=$master->get_user_data($user_id)['is_approved_as_coordinator'];
+
 ?>
 
 <!DOCTYPE html>
@@ -147,7 +150,7 @@
         </div>
       
       <?php
-        }elseif($logged_in_user_role==1 && $researcher_id!=$user_id){
+        }elseif($logged_in_user_role==1 && $researcher_id!=$user_id && $is_approved_as_coordinator==1){
       ?>
         <div class="dropdown show">
           <a class="btn" href="#" role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:black;"><i class="fa fa-ellipsis-v"> </i></a>
@@ -609,22 +612,8 @@
 
     
 
-    <footer>
-      <div class="container">
-        <p>&copy; Your Website 2018. All Rights Reserved.</p>
-        <ul class="list-inline">
-          <li class="list-inline-item">
-            <a href="#">Privacy</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">Terms</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">FAQ</a>
-          </li>
-        </ul>
-      </div>
-    </footer>
+    <?php include ("footer.php");?>
+    
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>

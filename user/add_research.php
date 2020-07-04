@@ -58,7 +58,8 @@
         <div class="row">
             
             <div class="col-md-8 mx-auto mb-5">
-                <h4 class="section-heading">Add Research</h4> <br>
+                <h4 class="section-heading">Add Research</h4>
+                <h6 class="section-heading" style="font-size:12px;color:red">Please note that a coordinator must approve your research before it can appear on the home page</h6> <br>
                 <form id="addResearchForm">
                     <div class="form-group">
                         <label for="title">Title</label>
@@ -95,22 +96,7 @@
 
     
 
-    <footer>
-      <div class="container">
-        <p>&copy; Your Website 2018. All Rights Reserved.</p>
-        <ul class="list-inline">
-          <li class="list-inline-item">
-            <a href="#">Privacy</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">Terms</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">FAQ</a>
-          </li>
-        </ul>
-      </div>
-    </footer>
+    <?php include ("footer.php");?>
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>

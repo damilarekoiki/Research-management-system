@@ -1,20 +1,29 @@
 <?php
-    include ("../app/init.php");
-    if(!isset($_SESSION['email'])){
+  include ("../app/init.php");
+  if(!isset($_SESSION['email'])){
     $master->redirect("../index.php");
-    }
+  }
 
-    $all_researches=[];
-    if(!isset($_GET['research_search'])){
-        $master->redirect("index.php");
-        exit();
+  $all_researches=[];
+  if(!isset($_GET['research_search'])){
+      $master->redirect("index.php");
+      exit();
+  }else{
+    if($_GET['research_search']==""){
+      $master->redirect("index.php");
+      exit();
     }else{
-        $research_title=$_GET['research_search'];
-        $all_researches=$research->search($research_title);
+      $research_title=$_GET['research_search'];
+      $all_researches=$research->search($research_title);
     }
+      
+  }
 
-    $follower_id=$user_id;
-    $all_references_avail=$research->get_all_references_avail();
+  $follower_id=$user_id;
+  $all_references_avail=$research->get_all_references_avail();
+
+  $is_approved_as_coordinator=$master->get_user_data($user_id)['is_approved_as_coordinator'];
+
 
     
 ?>
@@ -73,7 +82,7 @@
             <div class="col-md-8 mx-auto mb-5">
             <?php if(isset($_GET['research_search'])){?>
                 <h4 style="font-weight:bold">Search result for <?php echo $_GET['research_search'];?></h4><?php } ?>
-                <h6><?php echo count($all_researches);if(count($all_researches)==1)echo "result";else echo "results"?> for found</h6>
+                <h6><?php echo count($all_researches);if(count($all_researches)==1)echo " result";else echo " results"?> found</h6>
             </div>
             <div class="col-md-8 mx-auto mb-5" style="margin-top:15px;">
                 <?php
@@ -158,7 +167,7 @@
         </div>
       
       <?php
-        }elseif($logged_in_user_role==1 && $researcher_id!=$user_id){
+        }elseif($logged_in_user_role==1 && $researcher_id!=$user_id && $is_approved_as_coordinator==1){
       ?>
         <div class="dropdown show">
           <a class="btn" href="#" role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:black;"><i class="fa fa-ellipsis-v"> </i></a>
@@ -356,7 +365,7 @@
 <?php
                   }
                 }else{
-                  echo "<div><span style='color;grey'>No research added yet, be the first to</span> <a href='add_research.php' style='color:blue;border-bottom:1px solid blue'>add a research</a></div>";
+                  echo "<div><span style='color;grey'>No result found</span></div>";
                 }
                 ?>
             </div>
@@ -619,22 +628,8 @@
 
     
 
-    <footer>
-      <div class="container">
-        <p>&copy; Your Website 2018. All Rights Reserved.</p>
-        <ul class="list-inline">
-          <li class="list-inline-item">
-            <a href="#">Privacy</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">Terms</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">FAQ</a>
-          </li>
-        </ul>
-      </div>
-    </footer>
+    <?php include ("footer.php");?>
+    
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>

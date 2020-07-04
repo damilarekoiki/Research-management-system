@@ -5,7 +5,7 @@ class Coordinator extends Master
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////setters///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    public  function __construct($db_conn,$lang)
-{       Master::__construct($db_conn,$lang);
+    {       Master::__construct($db_conn,$lang);
         // $this->user_role = $user_role;
           
    }
@@ -83,6 +83,16 @@ class Coordinator extends Master
         $where=" WHERE research_id=$research_id AND researcher_id=$researcher_id";
 
         $check = $this->updateData($data,$table,$where);
+    }
+
+    public function fetch_all()
+    {
+        $data = "*";
+        $table = "user";
+        $where = " WHERE user_role=1 ORDER BY id DESC";
+
+        $result = $this->getAllData($data, $table, $where);
+        return $result;
     }
 
 }

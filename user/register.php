@@ -51,10 +51,10 @@
       <div class="container">
         <div class="row">
             <div class="col-md-8 mx-auto mb-5">
-                
-                <h4 class="section-heading">Register</h4> <br>
-                
                 <div id="errorMsg"></div>
+                <h4 class="section-heading">Register</h4>
+                <h6 class="section-heading" style="font-size:12px;color:red">Please note that a registered coordinator must be approved by an admin, before they have all the privileges of a coordinator</h6> <br>
+
                 <form id="regForm">
                     <div class="form-group">
                         <label for="sn">Surname</label>
@@ -92,22 +92,8 @@
 
     
 
-    <footer>
-      <div class="container">
-        <p>&copy; Your Website 2018. All Rights Reserved.</p>
-        <ul class="list-inline">
-          <li class="list-inline-item">
-            <a href="#">Privacy</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">Terms</a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#">FAQ</a>
-          </li>
-        </ul>
-      </div>
-    </footer>
+    <?php include ("footer.php");?>
+    
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -136,27 +122,27 @@
           formData=new FormData($("#regForm")[0]);
           formData.append("register",1)
 
-          $.ajax({
-              url:"../parser/user_parser.php",
-              data:formData,
-              type:"post",
-              contentType: false,
-            cache: false,
-            processData: false,
-            success:function(data){
-                console.log(data);
-                data=JSON.parse(data);
-                $("#regButton").val("Register");
-                if(data.status==1){
-                    $("#errorMsg").html("<div class='alert alert-success'>"+data.message+"</div>");
-                    setTimeout(() => {
-                        window.location=data.url;                        
-                    }, 3000);
-                }else{
-                    $("#errorMsg").html("<div class='alert alert-danger'>"+data.message+"</div>");
-                }
-            }
-          })
+            $.ajax({
+                url:"../parser/user_parser.php",
+                data:formData,
+                type:"post",
+                contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function(data){
+                        console.log(data);
+                        data=JSON.parse(data);
+                        $("#regButton").val("Register");
+                        if(data.status==1){
+                            $("#errorMsg").html("<div class='alert alert-success'>"+data.message+"</div>");
+                            setTimeout(() => {
+                                window.location=data.url;                        
+                            }, 3000);
+                        }else{
+                            $("#errorMsg").html("<div class='alert alert-danger'>"+data.message+"</div>");
+                        }
+                    }
+            })
       })
   </script>
 

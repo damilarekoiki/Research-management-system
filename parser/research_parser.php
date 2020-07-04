@@ -7,7 +7,7 @@
         $researcher_id=$_SESSION['user_id'];
         if(!empty($title)&&!empty($description)){
             if($research->research_exists($title,$researcher_id)){
-                exit(json_encode(["status"=>0,"message"=>"Research already exists"]));
+                exit(json_encode(["status"=>0,"message"=>"You have already created this research before"]));
             }
             $result=json_decode($research->add($title,$description,$researcher_id),true);
             if($result['status']==1){
@@ -404,17 +404,17 @@
             
 
             $download_link="";
-            if($researcher->is_authorized($research_id,$contributor)){
-                $download_link="&nbsp; <a href='$file_path' download style='color:blue;font-size:18px;'> <i class='fa fa-download'></i></a>";
+            if($researcher->is_authorized($research_id,$contributor) || $admin->is_admin($_SESSION['email'])){
+                $download_link="&nbsp; <a href='../$file_path' download style='color:blue;font-size:18px;'> <i class='fa fa-download'></i></a>";
             }
 
             
 
             if(array_key_exists($file_extension,$file_logos)){
-                $file_display="<img src='$file_logos[$file_extension]' class='img img-responsive' height='85px'>";
+                $file_display="<img src='$file_logos[$file_extension]' class='' height='85px'>";
             }
             if(in_array($file_extension,$image_types)){
-                $file_display="<img src='../$file_path' class='img img-responsive'>";
+                $file_display="<img src='../$file_path' class=''>";
             }
             if(in_array($file_extension,$video_types)){
                 $file_display="<video width='640' height='400' src='../$file_path' controls ></video>";
@@ -511,17 +511,17 @@
             
 
             $download_link="";
-            if($researcher->is_authorized($research_id,$researcher_id)){
-                $download_link="&nbsp; <a href='$file_path' download style='color:blue;font-size:18px;'> <i class='fa fa-download'></i></a>";
+            if($researcher->is_authorized($research_id,$researcher_id) || $admin->is_admin($_SESSION['email'])){
+                $download_link="&nbsp; <a href='../$file_path' download style='color:blue;font-size:18px;'> <i class='fa fa-download'></i></a>";
             }
 
             
 
             if(array_key_exists($file_extension,$file_logos)){
-                $file_display="<img src='$file_logos[$file_extension]' class='img img-responsive' height='85px'>";
+                $file_display="<img src='$file_logos[$file_extension]' class='' height='85px'>";
             }
             if(in_array($file_extension,$image_types)){
-                $file_display="<img src='../$file_path' class='img img-responsive'>";
+                $file_display="<img src='../$file_path' class=''>";
             }
             if(in_array($file_extension,$video_types)){
                 $file_display="<video width='640' height='400' src='../$file_path' controls ></video>";
@@ -845,7 +845,7 @@
 
                  $all_comments_made.="<div class='row'>
                  <div class='col-md-5'>
-                 <img src='../$comment_by_pix' height='18px' class='img img-responsive'/>
+                 <img src='../$comment_by_pix' height='18px' class=''/>
                  <div style='font-size:11px'>$comment_by_name</div>
                  </div>
 
@@ -890,7 +890,7 @@
 
                  $contribution_content.="<div class='row' style='margin-bottom:10px'>
                  <div class='col-md-3'>
-                 <img src='../$contributor_pix' height='18px' class='img img-responsive'/>
+                 <img src='../$contributor_pix' height='18px' class=''/>
                  <div style='font-size:11px;'>$contributor_name</div>
                  </div>
                  <div class='col-md-9'>
@@ -920,7 +920,7 @@
 
                     $contribution_content.="<div class='row' style='margin-bottom:10px'>
                      <div class='col-md-3'>
-                     <img src='../$contributor_pix' height='18px' class='img img-responsive'/>
+                     <img src='../$contributor_pix' height='18px' class=''/>
                      <div style='font-size:11px;'>$contributor_name</div>
                      </div>
                      <div class='col-md-9'>
